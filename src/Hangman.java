@@ -268,14 +268,32 @@ public class Hangman {
             }
         }
     }
+    public static void sort(int scr[])
+    {
+        int n = scr.length;
+        for (int i = 1; i < n; ++i) {
+            int key = scr[i];
+            int j = i - 1;
+
+            /* Move elements of arr[0..i-1], that are
+               greater than key, to one position ahead
+               of their current position */
+            while (j >= 0 && scr[j] > key) {
+                scr[j + 1] = scr[j];
+                j = j - 1;
+            }
+            scr[j + 1] = key;
+        }
+    }
 
     public static boolean login(Hangman players[],int numPlayer, int indexPlayer){
 
         Scanner input = new Scanner(System.in);
         int num = input.nextInt();
         int[] scores = new int[numPlayer];
+        String[] names = new String[numPlayer];
 
-        switch (num){
+        switch (num) {
             case 0:
                 return false;
 
@@ -287,8 +305,10 @@ public class Hangman {
                 clearScr();
                 int runOfBoard = 1;
 
-                for(int i = 0; i < numPlayer; i++)
+                for (int i = 0; i < numPlayer; i++) {
                     scores[i] = players[i].score;
+                    names[i] = players[i].username;
+                }
                 Arrays.sort(scores);
 
                 while(runOfBoard == 1) {
