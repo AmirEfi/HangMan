@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,13 +41,13 @@ public class Hangman {
         boolean one = false, two = false, three = false, four = false, five = false, six = false, seven = false;
 
         switch (lives) {
-            case 0: one = two = three = four = five = six = seven = true; break;
-            case 1: one = two = three = four = five = six = true; break;
-            case 2: one = two = three = four = five = true; break;
-            case 3: one = two = three = four = true; break;
-            case 4: one = two = three = true; break;
-            case 5: one = two = true; break;
-            case 6: one = true; break;
+            case 0 -> one = two = three = four = five = six = seven = true;
+            case 1 -> one = two = three = four = five = six = true;
+            case 2 -> one = two = three = four = five = true;
+            case 3 -> one = two = three = four = true;
+            case 4 -> one = two = three = true;
+            case 5 -> one = two = true;
+            case 6 -> one = true;
         }
 
         for (int i = 0; i < 4; i++)
@@ -268,25 +267,22 @@ public class Hangman {
             }
         }
     }
-    public static void sort(int scr[])
+    public static void sort(int[] scr, String[] nam)
     {
         int n = scr.length;
-        for (int i = 1; i < n; ++i) {
+        for (int i = 1; i < n; i++) {
             int key = scr[i];
             int j = i - 1;
-
-            /* Move elements of arr[0..i-1], that are
-               greater than key, to one position ahead
-               of their current position */
             while (j >= 0 && scr[j] > key) {
                 scr[j + 1] = scr[j];
+                nam[j + 1] = nam[j];
                 j = j - 1;
             }
             scr[j + 1] = key;
         }
     }
 
-    public static boolean login(Hangman players[],int numPlayer, int indexPlayer){
+    public static boolean login(Hangman[] players, int numPlayer, int indexPlayer){
 
         Scanner input = new Scanner(System.in);
         int num = input.nextInt();
@@ -309,18 +305,12 @@ public class Hangman {
                     scores[i] = players[i].score;
                     names[i] = players[i].username;
                 }
-                Arrays.sort(scores);
+                sort(scores, names);
 
                 while(runOfBoard == 1) {
 
-                    for (int i = scores.length-1; i >= 0; i--) {
-
-                        for (int j = 0; j < numPlayer; j++) {
-                            if(scores[i] == players[j].score)
-                                System.out.println(players[j].username + " ----- " + players[j].score);
-                        }
-
-                    }
+                    for (int i = scores.length-1; i >= 0; i--)
+                        System.out.println(names[i] + " ----- " + scores[i]);
                     System.out.println();
 
                     for (int i = 0; i < 70; i++)
@@ -340,24 +330,20 @@ public class Hangman {
         return true;
     }
 
-    public static void entrance(Hangman player, Hangman players[], int numPlayer){
+    public static void entrance(Hangman player, Hangman[] players, int numPlayer){
         Scanner input = new Scanner(System.in);
         int num = input.nextInt();
 
-        switch (num){
-            case 0:
-                System.exit(0);
-                break;
-
-            case 1:
+        switch (num) {
+            case 0 -> System.exit(0);
+            case 1 -> {
                 clearScr();
                 System.out.print("Enter your username: ");
                 player.username = input.next();
                 boolean sameID = false;
+                for (int i = 0; i < numPlayer; i++) {
 
-                for(int i = 0; i < numPlayer; i++){
-
-                    if(players[i].username.equals(player.username)){
+                    if (players[i].username.equals(player.username)) {
 
                         System.out.println("Sorry, This username had taken, Try another one.");
                         sameID = true;
@@ -367,18 +353,15 @@ public class Hangman {
                         break;
                     }
                 }
-                if(sameID)
+                if (sameID)
                     break;
-
                 System.out.print("Enter your password: ");
                 player.password = input.next();
                 System.out.println();
-
                 String rgxPassword = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{6,}$";
                 Pattern patternPass = Pattern.compile(rgxPassword);
                 Matcher matcher = patternPass.matcher(player.password);
-
-                if(matcher.matches()){
+                if (matcher.matches()) {
                     clearScr();
 
                     System.out.println("You registered successfully!");
@@ -386,34 +369,29 @@ public class Hangman {
                     delay();
 
                     player.numOfPlayer++;
-                }
-                else{
+                } else {
                     clearScr();
 
                     System.out.println("Your chosen password is not correct, please sign up again!");
 
                     delay();
                 }
-                break;
-
-            case 2:
+            }
+            case 2 -> {
                 clearScr();
-
-                if(numPlayer == 0){
+                if (numPlayer == 0) {
                     System.out.println("First, you have to sign up!");
                     delay();
-                    break;
                 }
-
                 else {
                     System.out.print("Enter your username: ");
                     String id = input.next();
                     int indexOfPlayer = 0;
                     boolean signedUp = false;
 
-                    for(int i = 0; i < numPlayer; i++){
+                    for (int i = 0; i < numPlayer; i++) {
 
-                        if(players[i].username.equals(id)){
+                        if (players[i].username.equals(id)) {
                             signedUp = true;
                             indexOfPlayer = i;
                             break;
@@ -421,42 +399,40 @@ public class Hangman {
 
                     }
 
-                    if(signedUp){
+                    if (signedUp) {
                         System.out.print("Enter your password: ");
                         String pass = input.next();
 
-                        if(players[indexOfPlayer].password.equals(pass)){
+                        if (players[indexOfPlayer].password.equals(pass)) {
                             clearScr();
                             boolean loginRun = true;
                             System.out.println("You logged in to your account successfully!");
                             delay();
 
-                            while(loginRun) {
+                            while (loginRun) {
                                 clearScr();
                                 LoginMenu();
                                 loginRun = login(players, numPlayer, indexOfPlayer);
                             }
 
-                        }
-                        else {
+                        } else {
                             clearScr();
                             System.out.println("Your password is not correct!");
                             System.out.println("Please login again.");
                             delay();
                         }
-                    }
-                    else{
+                    } else {
                         clearScr();
                         System.out.println("Sorry, first you have to sign up then try login!");
                         delay();
                     }
                 }
-            break;
-
-            default:
+            }
+            default -> {
                 clearScr();
                 System.out.println("Your chosen number is not correct!");
                 delay();
+            }
         }
     }
 }
@@ -464,7 +440,7 @@ class Test extends Hangman{
 
     public static void main(String[] arg ){
 
-        Hangman players[] = new Hangman[100];
+        Hangman[] players = new Hangman[100];
         int numPlayer = 0;
 
         for(int i = 0; i < players.length; i++)
